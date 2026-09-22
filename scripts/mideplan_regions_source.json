@@ -1,0 +1,159 @@
+{
+  "meta": {
+    "title": "Regiones de planificación y su conformación cantonal",
+    "source": "MIDEPLAN, Área de Planificación Regional, 2024. Decreto 16068-PLAN: Regionalización Oficial de Costa Rica",
+    "transcribedFrom": "MIDEPLAN map (screenshot)",
+    "notes": [
+      "Canton codes are INEC-style strings (province digit + 2-digit canton) for joining with boundary GeoJSON.",
+      "mapId is the label number on the source map, unique only within a region.",
+      "Colors are approximated from the source map.",
+      "Alajuela (201) and San Ramón (202) are split: districts Sarapiquí (20114) and Peñas Blancas (20213) belong to Huetar Norte; the rest of each canton belongs to Central."
+    ]
+  },
+  "provinces": {
+    "1": "San José",
+    "2": "Alajuela",
+    "3": "Cartago",
+    "4": "Heredia",
+    "5": "Guanacaste",
+    "6": "Puntarenas",
+    "7": "Limón"
+  },
+  "regions": [
+    {
+      "id": "chorotega",
+      "name": "Chorotega",
+      "color": "#C3D69B",
+      "cantons": [
+        { "mapId": 1, "name": "Liberia", "code": "501" },
+        { "mapId": 2, "name": "Nicoya", "code": "502" },
+        { "mapId": 3, "name": "Santa Cruz", "code": "503" },
+        { "mapId": 4, "name": "Bagaces", "code": "504" },
+        { "mapId": 5, "name": "Carrillo", "code": "505" },
+        { "mapId": 6, "name": "Cañas", "code": "506" },
+        { "mapId": 7, "name": "Abangares", "code": "507" },
+        { "mapId": 8, "name": "Tilarán", "code": "508" },
+        { "mapId": 9, "name": "Nandayure", "code": "509" },
+        { "mapId": 10, "name": "La Cruz", "code": "510" },
+        { "mapId": 11, "name": "Hojancha", "code": "511" }
+      ],
+      "districts": []
+    },
+    {
+      "id": "huetar-norte",
+      "name": "Huetar Norte",
+      "color": "#687497",
+      "cantons": [
+        { "mapId": 3, "name": "San Carlos", "code": "210" },
+        { "mapId": 4, "name": "Upala", "code": "213" },
+        { "mapId": 5, "name": "Los Chiles", "code": "214" },
+        { "mapId": 6, "name": "Guatuso", "code": "215" },
+        { "mapId": 7, "name": "Río Cuarto", "code": "216" },
+        { "mapId": 8, "name": "Sarapiquí", "code": "410" }
+      ],
+      "districts": [
+        { "mapId": 1, "name": "Sarapiquí", "code": "20114", "parentCanton": "201", "parentCantonName": "Alajuela" },
+        { "mapId": 2, "name": "Peñas Blancas", "code": "20213", "parentCanton": "202", "parentCantonName": "San Ramón" }
+      ]
+    },
+    {
+      "id": "pacifico-central",
+      "name": "Pacífico Central",
+      "color": "#667A3E",
+      "cantons": [
+        { "mapId": 1, "name": "San Mateo", "code": "204" },
+        { "mapId": 2, "name": "Orotina", "code": "209" },
+        { "mapId": 3, "name": "Puntarenas", "code": "601" },
+        { "mapId": 4, "name": "Esparza", "code": "602" },
+        { "mapId": 5, "name": "Montes de Oro", "code": "604" },
+        { "mapId": 6, "name": "Quepos", "code": "606" },
+        { "mapId": 7, "name": "Parrita", "code": "609" },
+        { "mapId": 8, "name": "Garabito", "code": "611" },
+        { "mapId": 9, "name": "Monteverde", "code": "612" }
+      ],
+      "districts": []
+    },
+    {
+      "id": "brunca",
+      "name": "Brunca",
+      "color": "#A0706A",
+      "cantons": [
+        { "mapId": 1, "name": "Pérez Zeledón", "code": "119" },
+        { "mapId": 2, "name": "Buenos Aires", "code": "603" },
+        { "mapId": 3, "name": "Osa", "code": "605" },
+        { "mapId": 4, "name": "Golfito", "code": "607" },
+        { "mapId": 5, "name": "Coto Brus", "code": "608" },
+        { "mapId": 6, "name": "Corredores", "code": "610" },
+        { "mapId": 7, "name": "Puerto Jiménez", "code": "613" }
+      ],
+      "districts": []
+    },
+    {
+      "id": "huetar-caribe",
+      "name": "Huetar Caribe",
+      "color": "#BCCCEF",
+      "cantons": [
+        { "mapId": 1, "name": "Limón", "code": "701" },
+        { "mapId": 2, "name": "Pococí", "code": "702" },
+        { "mapId": 3, "name": "Siquirres", "code": "703" },
+        { "mapId": 4, "name": "Talamanca", "code": "704" },
+        { "mapId": 5, "name": "Matina", "code": "705" },
+        { "mapId": 6, "name": "Guácimo", "code": "706" }
+      ],
+      "districts": []
+    },
+    {
+      "id": "central",
+      "name": "Central",
+      "color": "#D5C4BC",
+      "cantons": [
+        { "mapId": 1, "name": "San José", "code": "101" },
+        { "mapId": 2, "name": "Escazú", "code": "102" },
+        { "mapId": 3, "name": "Desamparados", "code": "103" },
+        { "mapId": 4, "name": "Puriscal", "code": "104" },
+        { "mapId": 5, "name": "Tarrazú", "code": "105" },
+        { "mapId": 6, "name": "Aserrí", "code": "106" },
+        { "mapId": 7, "name": "Mora", "code": "107" },
+        { "mapId": 8, "name": "Goicoechea", "code": "108" },
+        { "mapId": 9, "name": "Santa Ana", "code": "109" },
+        { "mapId": 10, "name": "Alajuelita", "code": "110" },
+        { "mapId": 11, "name": "Vázquez de Coronado", "code": "111" },
+        { "mapId": 12, "name": "Acosta", "code": "112" },
+        { "mapId": 13, "name": "Tibás", "code": "113" },
+        { "mapId": 14, "name": "Moravia", "code": "114" },
+        { "mapId": 15, "name": "Montes de Oca", "code": "115" },
+        { "mapId": 16, "name": "Turrubares", "code": "116" },
+        { "mapId": 17, "name": "Dota", "code": "117" },
+        { "mapId": 18, "name": "Curridabat", "code": "118" },
+        { "mapId": 19, "name": "León Cortés Castro", "code": "120" },
+        { "mapId": 20, "name": "Alajuela", "code": "201", "excludeDistricts": ["20114"] },
+        { "mapId": 21, "name": "San Ramón", "code": "202", "excludeDistricts": ["20213"] },
+        { "mapId": 22, "name": "Grecia", "code": "203" },
+        { "mapId": 23, "name": "Atenas", "code": "205" },
+        { "mapId": 24, "name": "Naranjo", "code": "206" },
+        { "mapId": 25, "name": "Palmares", "code": "207" },
+        { "mapId": 26, "name": "Poás", "code": "208" },
+        { "mapId": 27, "name": "Zarcero", "code": "211" },
+        { "mapId": 28, "name": "Sarchí", "code": "212" },
+        { "mapId": 29, "name": "Cartago", "code": "301" },
+        { "mapId": 30, "name": "Paraíso", "code": "302" },
+        { "mapId": 31, "name": "La Unión", "code": "303" },
+        { "mapId": 32, "name": "Jiménez", "code": "304" },
+        { "mapId": 33, "name": "Turrialba", "code": "305" },
+        { "mapId": 34, "name": "Alvarado", "code": "306" },
+        { "mapId": 35, "name": "Oreamuno", "code": "307" },
+        { "mapId": 36, "name": "El Guarco", "code": "308" },
+        { "mapId": 37, "name": "Heredia", "code": "401" },
+        { "mapId": 38, "name": "Barva", "code": "402" },
+        { "mapId": 39, "name": "Santo Domingo", "code": "403" },
+        { "mapId": 40, "name": "Santa Bárbara", "code": "404" },
+        { "mapId": 41, "name": "San Rafael", "code": "405" },
+        { "mapId": 42, "name": "San Isidro", "code": "406" },
+        { "mapId": 43, "name": "Belén", "code": "407" },
+        { "mapId": 44, "name": "Flores", "code": "408" },
+        { "mapId": 45, "name": "San Pablo", "code": "409" }
+      ],
+      "districts": []
+    }
+  ]
+}
