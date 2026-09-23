@@ -1,14 +1,22 @@
-import { useEffect } from "react";
-import { MapContainer, TileLayer, useMap, useMapEvents } from "react-leaflet";
-import L from "leaflet";
+import { MapContainer, TileLayer } from "react-leaflet";
 import type { FeatureCollection } from "geojson";
 import BoundaryLayer from "./BoundaryLayer";
-import PointsLayer from "./PointsLayer";
 import WaterPlantsLayer from "./WaterPlantsLayer";
 import Legend, { WaterPlantsLegend } from "./Legend";
-import type { IndicatorDataset, MapPoint } from "../types";
+import type { IndicatorDataset } from "../types";
+import type { MapTheme } from "../utils/color";
 
 const CR_CENTER: [number, number] = [9.7489, -83.7534];
+
+const TILE_URL: Record<MapTheme, string> = {
+  dark: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+  light: "https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}",
+};
+
+const BOUNDARY_COLORS: Record<MapTheme, { provincias: string; regiones: string; cantones: string; cafetaleras: string }> = {
+  dark: { provincias: "#94a3b8", regiones: "#818cf8", cantones: "#2dd4bf", cafetaleras: "#d9a066" },
+  light: { provincias: "#475569", regiones: "#4338ca", cantones: "#0f766e", cafetaleras: "#7c4a1e" },
+};
 
 interface Props {
   provincias: FeatureCollection | null;
@@ -22,49 +30,7 @@ interface Props {
   showRegionesCafetaleras: boolean;
   showPlantasAgua: boolean;
   indicator?: IndicatorDataset;
-  points: MapPoint[];
-  onMovePoint: (id: string, lat: number, lng: number) => void;
-  onRemovePoint: (id: string) => void;
-  addMode: boolean;
-  activeColor: string;
-  onAddPoint: (lat: number, lng: number, color: string) => void;
-}
-
-function ClickToAdd({ addMode, activeColor, onAddPoint }: Pick<Props, "addMode" | "activeColor" | "onAddPoint">) {
-  useMapEvents({
-    click(e) {
-      if (addMode) onAddPoint(e.latlng.lat, e.latlng.lng, activeColor);
-    },
-  });
-  return null;
-}
-
-function DropTarget({ onAddPoint }: Pick<Props, "onAddPoint">) {
-  const map = useMap();
-
-  useEffect(() => {
-    const container = map.getContainer();
-
-    const onDragOver = (e: DragEvent) => e.preventDefault();
-    const onDrop = (e: DragEvent) => {
-      e.preventDefault();
-      const color = e.dataTransfer?.getData("text/plain");
-      if (!color) return;
-      const rect = container.getBoundingClientRect();
-      const point = L.point(e.clientX - rect.left, e.clientY - rect.top);
-      const latlng = map.containerPointToLatLng(point);
-      onAddPoint(latlng.lat, latlng.lng, color);
-    };
-
-    container.addEventListener("dragover", onDragOver);
-    container.addEventListener("drop", onDrop);
-    return () => {
-      container.removeEventListener("dragover", onDragOver);
-      container.removeEventListener("drop", onDrop);
-    };
-  }, [map, onAddPoint]);
-
-  return null;
+  theme: MapTheme;
 }
 
 export default function MapView(props: Props) {
@@ -80,47 +46,52 @@ export default function MapView(props: Props) {
     showRegionesCafetaleras,
     showPlantasAgua,
     indicator,
-    points,
-    onMovePoint,
-    onRemovePoint,
-    addMode,
-    activeColor,
-    onAddPoint,
+    theme,
   } = props;
 
+  const boundaryColors = BOUNDARY_COLORS[theme];
+
   return (
-    <div className="map-area" style={{ cursor: addMode ? "crosshair" : undefined }}>
-      {addMode && <div className="drop-hint">Clic en el mapa para agregar un punto</div>}
+    <main id="main-map" className="map-area" aria-label="Mapa interactivo de Costa Rica" tabIndex={-1}>
       <MapContainer center={CR_CENTER} zoom={8} minZoom={7} scrollWheelZoom>
         <TileLayer
+          key={theme}
           attribution='&copy; <a href="https://www.esri.com">Esri</a> &mdash; Esri, HERE, Garmin, FAO, NOAA, USGS'
-          url="https://services.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}"
+          url={TILE_URL[theme]}
           maxZoom={16}
         />
 
         {showProvincias && provincias && (
-          <BoundaryLayer data={provincias} layerKey="provincias" baseColor="#334155" />
+          <BoundaryLayer data={provincias} layerKey="provincias" baseColor={boundaryColors.provincias} theme={theme} />
         )}
         {showRegiones && regiones && (
-          <BoundaryLayer data={regiones} layerKey="regiones" baseColor="#4338ca" dashed />
+          <BoundaryLayer data={regiones} layerKey="regiones" baseColor={boundaryColors.regiones} dashed theme={theme} />
         )}
         {showCantones && cantones && (
-          <BoundaryLayer data={cantones} layerKey="cantones" baseColor="#0f766e" indicator={indicator} />
+          <BoundaryLayer
+            data={cantones}
+            layerKey="cantones"
+            baseColor={boundaryColors.cantones}
+            indicator={indicator}
+            theme={theme}
+          />
         )}
         {showRegionesCafetaleras && regionesCafetaleras && (
-          <BoundaryLayer data={regionesCafetaleras} layerKey="regiones_cafetaleras" baseColor="#7c4a1e" dashed />
+          <BoundaryLayer
+            data={regionesCafetaleras}
+            layerKey="regiones_cafetaleras"
+            baseColor={boundaryColors.cafetaleras}
+            dashed
+            theme={theme}
+          />
         )}
         {showPlantasAgua && plantasAgua && <WaterPlantsLayer data={plantasAgua} />}
-
-        <PointsLayer points={points} onMove={onMovePoint} onRemove={onRemovePoint} />
-        <ClickToAdd addMode={addMode} activeColor={activeColor} onAddPoint={onAddPoint} />
-        <DropTarget onAddPoint={onAddPoint} />
       </MapContainer>
 
-      <div className="legend-stack">
-        {indicator && showCantones && <Legend indicator={indicator} />}
+      <div className="legend-stack" aria-label="Leyendas del mapa">
+        {indicator && showCantones && <Legend indicator={indicator} theme={theme} />}
         {showPlantasAgua && <WaterPlantsLegend />}
       </div>
-    </div>
+    </main>
   );
 }

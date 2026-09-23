@@ -1,14 +1,27 @@
-// Small hand-rolled sequential scales so we don't need a charting/color
-// dependency just for a choropleth and a couple of point layers.
-const STOPS: [number, string][] = [
-  [0, "#fff7bc"],
-  [0.25, "#fec44f"],
-  [0.5, "#d95f0e"],
-  [0.75, "#993404"],
-  [1, "#662506"],
+// Sequential scales from ColorBrewer (colorbrewer2.org) — cold (blue/green/purple)
+// hues picked to read well against the two basemap tones the app switches between.
+export type MapTheme = "dark" | "light";
+
+// YlGnBu, 5-class: brighter top end pops against a near-black dark canvas.
+const COLD_STOPS_DARK: [number, string][] = [
+  [0, "#ffffcc"],
+  [0.25, "#a1dab4"],
+  [0.5, "#41b6c4"],
+  [0.75, "#2c7fb8"],
+  [1, "#253494"],
+];
+
+// PuBuGn, 5-class: softer light end and no yellow, so it sits calmly on white/light gray.
+const COLD_STOPS_LIGHT: [number, string][] = [
+  [0, "#f6eff7"],
+  [0.25, "#bdc9e1"],
+  [0.5, "#67a9cf"],
+  [0.75, "#1c9099"],
+  [1, "#016c59"],
 ];
 
 // green -> amber -> red, for "share of samples failing a limit" style rates.
+// Kept identical across themes: this hue mapping is semantic (pass/fail), not decorative.
 const RATE_STOPS: [number, string][] = [
   [0, "#16a34a"],
   [0.15, "#84cc16"],
@@ -47,22 +60,16 @@ function interpolate(stops: [number, string][], value: number, [min, max]: [numb
   return stops[stops.length - 1][1];
 }
 
-export function colorForValue(value: number, scale: [number, number]): string {
-  return interpolate(STOPS, value, scale);
+export function colorForValue(value: number, scale: [number, number], theme: MapTheme): string {
+  return interpolate(theme === "dark" ? COLD_STOPS_DARK : COLD_STOPS_LIGHT, value, scale);
 }
 
 export function colorForRate(value: number, scale: [number, number] = [0, 1]): string {
   return interpolate(RATE_STOPS, value, scale);
 }
 
-export const LEGEND_STOPS = STOPS;
-export const RATE_LEGEND_STOPS = RATE_STOPS;
+export function legendStops(theme: MapTheme): [number, string][] {
+  return theme === "dark" ? COLD_STOPS_DARK : COLD_STOPS_LIGHT;
+}
 
-export const PALETTE_COLORS = [
-  "#2563eb",
-  "#dc2626",
-  "#16a34a",
-  "#9333ea",
-  "#ea580c",
-  "#0891b2",
-];
+export const RATE_LEGEND_STOPS = RATE_STOPS;

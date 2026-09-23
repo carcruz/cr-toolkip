@@ -1,5 +1,5 @@
 import type { IndicatorDataset } from "../types";
-import { LEGEND_STOPS, RATE_LEGEND_STOPS } from "../utils/color";
+import { legendStops, RATE_LEGEND_STOPS, type MapTheme } from "../utils/color";
 
 function GradientLegend({
   title,
@@ -17,12 +17,12 @@ function GradientLegend({
   const gradient = `linear-gradient(to right, ${stops.map(([t, c]) => `${c} ${t * 100}%`).join(", ")})`;
 
   return (
-    <div className="legend">
+    <div className="legend" role="group" aria-label={`Leyenda: ${title}, de ${minLabel} a ${maxLabel}`}>
       <div className="title">
         {title} {badge && <span className="badge demo">{badge}</span>}
       </div>
-      <div className="legend-gradient" style={{ background: gradient }} />
-      <div className="legend-scale">
+      <div className="legend-gradient" style={{ background: gradient }} aria-hidden="true" />
+      <div className="legend-scale" aria-hidden="true">
         <span>{minLabel}</span>
         <span>{maxLabel}</span>
       </div>
@@ -30,13 +30,13 @@ function GradientLegend({
   );
 }
 
-export default function Legend({ indicator }: { indicator: IndicatorDataset }) {
+export default function Legend({ indicator, theme }: { indicator: IndicatorDataset; theme: MapTheme }) {
   const [min, max] = indicator.scale;
   return (
     <GradientLegend
       title={indicator.label}
       badge={indicator.demo ? "demo" : undefined}
-      stops={LEGEND_STOPS}
+      stops={legendStops(theme)}
       minLabel={String(min)}
       maxLabel={String(max)}
     />

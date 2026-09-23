@@ -16,14 +16,6 @@ export interface IndicatorDataset {
   values: Record<string, number>;
 }
 
-export interface MapPoint {
-  id: string;
-  lat: number;
-  lng: number;
-  label: string;
-  color: string;
-}
-
 export interface WaterPlantProperties {
   sistema: string;
   region_aya: string;

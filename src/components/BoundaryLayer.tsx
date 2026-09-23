@@ -1,7 +1,7 @@
 import { GeoJSON } from "react-leaflet";
 import type { Feature, FeatureCollection } from "geojson";
 import type { Layer, Path, PathOptions } from "leaflet";
-import { colorForValue } from "../utils/color";
+import { colorForValue, type MapTheme } from "../utils/color";
 import type { IndicatorDataset } from "../types";
 
 interface Props {
@@ -10,16 +10,17 @@ interface Props {
   baseColor: string;
   dashed?: boolean;
   indicator?: IndicatorDataset;
+  theme: MapTheme;
 }
 
-export default function BoundaryLayer({ data, layerKey, baseColor, dashed, indicator }: Props) {
+export default function BoundaryLayer({ data, layerKey, baseColor, dashed, indicator, theme }: Props) {
   const style = (feature?: Feature): PathOptions => {
     const id = feature?.properties?.id as string | undefined;
     if (indicator && id && id in indicator.values) {
       return {
-        color: "#334155",
+        color: theme === "dark" ? "#8993a1" : "#334155",
         weight: 1,
-        fillColor: colorForValue(indicator.values[id], indicator.scale),
+        fillColor: colorForValue(indicator.values[id], indicator.scale, theme),
         fillOpacity: 0.75,
       };
     }
@@ -61,6 +62,11 @@ export default function BoundaryLayer({ data, layerKey, baseColor, dashed, indic
   };
 
   return (
-    <GeoJSON key={`${layerKey}-${indicator?.indicator ?? "none"}`} data={data} style={style} onEachFeature={onEachFeature} />
+    <GeoJSON
+      key={`${layerKey}-${indicator?.indicator ?? "none"}-${theme}`}
+      data={data}
+      style={style}
+      onEachFeature={onEachFeature}
+    />
   );
 }
