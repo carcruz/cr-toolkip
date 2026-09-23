@@ -392,6 +392,12 @@ select {
     z-index: 1200;
   }
 
+  /* Leaflet's zoom control defaults to top-left, same corner as the hamburger. */
+  .leaflet-top.leaflet-left {
+    left: auto;
+    right: 10px;
+  }
+
   .panel-wrap {
     position: fixed;
     inset: 0 auto 0 0;
