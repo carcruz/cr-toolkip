@@ -23,18 +23,21 @@ hand-rolled version is good enough (it usually is at this scale).
 ## Structure
 
 ```
-public/data/            GeoJSON + indicator JSON served as-is (see DATA_SOURCES.md)
-scripts/build-data.mjs  one-off script that derived public/data/ from raw downloads
+public/data/                        GeoJSON + indicator JSON served as-is (see DATA_SOURCES.md)
+public/data/indicators_manifest.json  list of {id, file, label, demo} — drives the indicator <select>
+scripts/build-data.mjs              one-off script that derived provincias/cantones/demo indicator
+scripts/build-indicators-atlas.mjs  one-off script that derived the Atlas 2026 indicator JSONs
+scripts/raw/                        raw source files for one-off scripts (not fetched at runtime)
 src/
-  components/           MapView, BoundaryLayer, PointsLayer, Legend, LayerControlPanel
-  hooks/                useGeoJSON (fetch+cache), usePoints (in-memory point state + export)
-  utils/color.ts         choropleth color scale + point palette colors
-  types.ts               shared types (BoundaryFeatureProps, IndicatorDataset, MapPoint)
+  components/           MapView, BoundaryLayer, WaterPlantsLayer, Legend, LayerControlPanel
+  hooks/                useGeoJSON (fetch+cache GeoJSON), useJSON (generic fetch+cache)
+  utils/color.ts         choropleth color scales (dark/light ColorBrewer stops) + rate scale
+  types.ts               shared types (BoundaryFeatureProps, IndicatorDataset, IndicatorManifestEntry)
 ```
 
-`App.tsx` owns all top-level state (layer visibility, choropleth on/off,
-points, add-point mode) and passes it down. `MapView` owns the Leaflet
-`MapContainer` and the click/drag-drop interaction handlers.
+`App.tsx` owns all top-level state (theme, layer visibility, choropleth
+on/off, selected indicator) and passes it down. `MapView` owns the Leaflet
+`MapContainer`.
 
 ## Conventions
 
@@ -59,8 +62,8 @@ points, add-point mode) and passes it down. `MapView` owns the Leaflet
 
 1. Add a JSON file to `public/data/` following the `IndicatorDataset` shape
    in `src/types.ts`, keyed by the same canton `id` slugs as `cantones.geojson`.
-2. Wire it into the indicator `<select>` in `LayerControlPanel.tsx` (currently
-   hardcoded to the single demo indicator — it's a stub, not a real picker,
-   since there's only one indicator so far).
+2. Add an entry to `public/data/indicators_manifest.json`
+   (`{id, file, label, demo}`) — the `<select>` in `LayerControlPanel.tsx`
+   is driven entirely by this manifest, no code change needed there.
 3. Update `DATA_SOURCES.md` with the source, license, date, and admin level,
    and mark clearly whether it's real or demo data.

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { useGeoJSON } from "./hooks/useGeoJSON";
+import { useJSON } from "./hooks/useJSON";
 import MapView from "./components/MapView";
 import LayerControlPanel from "./components/LayerControlPanel";
-import type { IndicatorDataset } from "./types";
+import type { IndicatorDataset, IndicatorManifestEntry } from "./types";
 import type { MapTheme } from "./utils/color";
 
 const THEME_STORAGE_KEY = "cr-toolkit-theme";
@@ -19,13 +20,13 @@ export default function App() {
   const regiones = useGeoJSON("/data/regiones_mideplan.geojson");
   const regionesCafetaleras = useGeoJSON("/data/regiones_cafetaleras_icafe.geojson");
   const plantasAgua = useGeoJSON("/data/plantas_potabilizadoras_aya.geojson");
-  const [indicatorData, setIndicatorData] = useState<IndicatorDataset | null>(null);
 
-  useEffect(() => {
-    fetch("/data/ids_cantonal_demo.json")
-      .then((r) => r.json())
-      .then(setIndicatorData);
-  }, []);
+  const indicators = useJSON<IndicatorManifestEntry[]>("/data/indicators_manifest.json");
+  const [selectedIndicatorId, setSelectedIndicatorId] = useState("idh");
+  const selectedIndicatorEntry = indicators?.find((i) => i.id === selectedIndicatorId);
+  const indicatorData = useJSON<IndicatorDataset>(
+    selectedIndicatorEntry ? `/data/${selectedIndicatorEntry.file}` : null
+  );
 
   const [theme, setTheme] = useState<MapTheme>(initialTheme);
 
@@ -34,12 +35,12 @@ export default function App() {
     localStorage.setItem(THEME_STORAGE_KEY, theme);
   }, [theme]);
 
-  const [showProvincias, setShowProvincias] = useState(true);
+  const [showProvincias, setShowProvincias] = useState(false);
   const [showCantones, setShowCantones] = useState(true);
   const [showRegiones, setShowRegiones] = useState(false);
   const [showRegionesCafetaleras, setShowRegionesCafetaleras] = useState(false);
-  const [showPlantasAgua, setShowPlantasAgua] = useState(true);
-  const [choroplethOn, setChoroplethOn] = useState(false);
+  const [showPlantasAgua, setShowPlantasAgua] = useState(false);
+  const [choroplethOn, setChoroplethOn] = useState(true);
 
   const [panelOpen, setPanelOpen] = useState(false);
   const hamburgerRef = useRef<HTMLButtonElement>(null);
@@ -119,6 +120,9 @@ export default function App() {
           setShowPlantasAgua={setShowPlantasAgua}
           choroplethOn={choroplethOn}
           setChoroplethOn={setChoroplethOn}
+          indicators={indicators ?? []}
+          selectedIndicatorId={selectedIndicatorId}
+          setSelectedIndicatorId={setSelectedIndicatorId}
           indicator={indicatorData ?? undefined}
         />
       </div>

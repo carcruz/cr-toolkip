@@ -1,4 +1,4 @@
-import type { IndicatorDataset } from "../types";
+import type { IndicatorDataset, IndicatorManifestEntry } from "../types";
 import type { MapTheme } from "../utils/color";
 
 interface Props {
@@ -17,6 +17,9 @@ interface Props {
   setShowPlantasAgua: (v: boolean) => void;
   choroplethOn: boolean;
   setChoroplethOn: (v: boolean) => void;
+  indicators: IndicatorManifestEntry[];
+  selectedIndicatorId: string;
+  setSelectedIndicatorId: (id: string) => void;
   indicator?: IndicatorDataset;
 }
 
@@ -37,8 +40,13 @@ export default function LayerControlPanel(props: Props) {
     setShowPlantasAgua,
     choroplethOn,
     setChoroplethOn,
+    indicators,
+    selectedIndicatorId,
+    setSelectedIndicatorId,
     indicator,
   } = props;
+
+  const realIndicators = indicators.filter((i) => !i.demo);
 
   return (
     <aside className="panel" aria-label="Panel de control de capas del mapa">
@@ -84,6 +92,47 @@ export default function LayerControlPanel(props: Props) {
       <hr className="divider" />
 
       <fieldset className="section">
+        <legend>Choropleth</legend>
+        <label className="option-row">
+          <input
+            type="checkbox"
+            checked={choroplethOn}
+            disabled={!showCantones}
+            onChange={(e) => setChoroplethOn(e.target.checked)}
+            aria-describedby={indicator ? "hint-indicador" : undefined}
+          />
+          Colorear cantones por indicador
+        </label>
+        {!showCantones && <p className="hint">Activá la capa de Cantones para habilitar el choropleth.</p>}
+        {realIndicators.length > 0 && (
+          <>
+            <label className="sr-only" htmlFor="indicator-select">
+              Indicador a colorear
+            </label>
+            <select
+              id="indicator-select"
+              value={selectedIndicatorId}
+              onChange={(e) => setSelectedIndicatorId(e.target.value)}
+            >
+              {realIndicators.map((i) => (
+                <option key={i.id} value={i.id}>
+                  {i.label}
+                </option>
+              ))}
+            </select>
+            {indicator && (
+              <p className="hint" id="hint-indicador">
+                {indicator.year && `${indicator.year} — `}
+                {indicator.source}
+              </p>
+            )}
+          </>
+        )}
+      </fieldset>
+
+      <hr className="divider" />
+
+      <fieldset className="section">
         <legend>Capas temáticas</legend>
         <label className="option-row">
           <input
@@ -112,37 +161,6 @@ export default function LayerControlPanel(props: Props) {
           Muestras de calidad de agua 2017–2021 por planta potabilizadora, dato provisto por el usuario. Color = tasa
           de incumplimiento (verde bajo, rojo alto). Clic en un punto para el detalle por parámetro.
         </p>
-      </fieldset>
-
-      <hr className="divider" />
-
-      <fieldset className="section">
-        <legend>Choropleth</legend>
-        <label className="option-row">
-          <input
-            type="checkbox"
-            checked={choroplethOn}
-            disabled={!showCantones}
-            onChange={(e) => setChoroplethOn(e.target.checked)}
-            aria-describedby={indicator ? "hint-indicador" : undefined}
-          />
-          Colorear cantones por indicador
-        </label>
-        {!showCantones && <p className="hint">Activá la capa de Cantones para habilitar el choropleth.</p>}
-        {indicator && (
-          <>
-            <label className="sr-only" htmlFor="indicator-select">
-              Indicador seleccionado
-            </label>
-            <select id="indicator-select" disabled value={indicator.indicator}>
-              <option value={indicator.indicator}>{indicator.label}</option>
-            </select>
-            <p className="hint" id="hint-indicador">
-              <span className="badge demo">demo</span> {indicator.source}. Único indicador disponible en v1 — agregar más en{" "}
-              <code>public/data/</code>.
-            </p>
-          </>
-        )}
       </fieldset>
     </aside>
   );

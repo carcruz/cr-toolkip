@@ -1,0 +1,50 @@
+[
+  {
+    "id": "idh",
+    "file": "idh_cantonal.json",
+    "label": "Índice de Desarrollo Humano (IDH)",
+    "demo": false
+  },
+  {
+    "id": "idg",
+    "file": "idg_cantonal.json",
+    "label": "Índice de Desarrollo de Género (IDG)",
+    "demo": false
+  },
+  {
+    "id": "idh_d",
+    "file": "idh_d_cantonal.json",
+    "label": "IDH ajustado por Desigualdad (IDH-D)",
+    "demo": false
+  },
+  {
+    "id": "idg_d",
+    "file": "idg_d_cantonal.json",
+    "label": "Índice de Desigualdad de Género (IDG-D)",
+    "demo": false
+  },
+  {
+    "id": "isc",
+    "file": "isc_cantonal.json",
+    "label": "Índice de Seguridad Ciudadana (ISC)",
+    "demo": false
+  },
+  {
+    "id": "ivdac",
+    "file": "ivdac_cantonal.json",
+    "label": "Índice de Vulnerabilidad a Drogas y Actividades Conexas (IVDAC)",
+    "demo": false
+  },
+  {
+    "id": "ipm",
+    "file": "ipm_cantonal.json",
+    "label": "Índice de Pobreza Multidimensional (IPM)",
+    "demo": false
+  },
+  {
+    "id": "ids_demo",
+    "file": "ids_cantonal_demo.json",
+    "label": "Índice de Desarrollo Social (DEMO)",
+    "demo": true
+  }
+]

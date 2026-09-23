@@ -16,6 +16,13 @@ export interface IndicatorDataset {
   values: Record<string, number>;
 }
 
+export interface IndicatorManifestEntry {
+  id: string;
+  file: string;
+  label: string;
+  demo: boolean;
+}
+
 export interface WaterPlantProperties {
   sistema: string;
   region_aya: string;
